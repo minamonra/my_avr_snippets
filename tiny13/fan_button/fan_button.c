@@ -77,7 +77,7 @@ void button_process()
 	
 	  if ((pressed) & (btcnt == 0)) released = 1;
 
-	  if ((lastbtcnt > 3) & (released)) // Короткое нажатие -> выключение
+	  if ((lastbtcnt > 2) & (released)) // Короткое нажатие -> выключение
 	  {
 	    pressed = 0;
 	    released = 0; 
@@ -126,7 +126,7 @@ int main(void)
   poweroff();
   adc_init();
   pwm_init();
-  pwm_set_duty(75);
+  pwm_set_duty(254);
   _delay_ms(2000);
   pwm_set_duty(0);
 
