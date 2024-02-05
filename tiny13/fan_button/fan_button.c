@@ -66,32 +66,33 @@ void button_process()
   {
     lastms = ttms;
 	
-	if (((PINB & (1 << SWPIN)) >> SWPIN) == 0) 
+	  if (((PINB & (1 << SWPIN)) >> SWPIN) == 0) 
 	  { 
 	  	btcnt++; 
 	  	lastbtcnt = btcnt;
 	  }  
-	else btcnt = 0;
+	  else btcnt = 0;
 	
-	if (btcnt) pressed = 1; 
+	  if (btcnt) pressed = 1; 
 	
-	if ((pressed) & (btcnt == 0)) released = 1;
+	  if ((pressed) & (btcnt == 0)) released = 1;
 
-	if ((lastbtcnt > 2) & (released)) // Короткое нажатие -> выключение
-	{
-	  poweroff();
-	  pressed = 0;
-	  released = 0; 
-	  lastbtcnt = 0;
-	}
+	  if ((lastbtcnt > 3) & (released)) // Короткое нажатие -> выключение
+	  {
+	    pressed = 0;
+	    released = 0; 
+	    lastbtcnt = 0;
+      poweroff();
+	  }
 		
-	if (lastbtcnt > 25) // Длинное нажатие (удержание)
-	{
-	  if (pwrstate) poweron(); else poweroff(); // Если БП выключен -> включим
-	  pressed = 0; 
-	  released = 0; 
-	  lastbtcnt = 0;
-	}
+	  if (lastbtcnt > 20) // Длинное нажатие (удержание)
+	  {
+	    pressed = 0; 
+	    //released = 0; 
+	    lastbtcnt = 0;
+      poweron();
+      // if (pwrstate == 0) poweron(); else poweroff(); // Если БП выключен -> включим
+	  }
   }
 }
 
@@ -110,7 +111,7 @@ void adc_process(void)
 	else 
 	{
       overheat = 0;
-	  if (value < 560) value = 560;
+	  if (value < 565) value = 565;
 	  duty = value - 560;          //
 	  if (duty < 30)  duty =   0;  //
 	  if (duty > 240) duty = 254;
