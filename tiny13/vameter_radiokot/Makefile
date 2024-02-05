@@ -10,8 +10,8 @@ AVRDUDE = avrdude
 # CFLAGS=-std=c99 -Wall -g -Os -mmcu=${MCU} -DF_CPU=${F_CPU} -I.
 CFLAGS  = -Wall -gdwarf-2 -O3 -Os -mmcu=${MCU} -DF_CPU=${F_CPU} -I.
 
-TARGET = vameter_gisteresis
-SRCS = vameter_gisteresis.c
+TARGET = vameter_tiny13
+SRCS = $(TARGET).c
 
 all:
 	${CC} ${CFLAGS} -o ${TARGET}.o ${SRCS}
