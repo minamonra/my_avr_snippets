@@ -14,9 +14,10 @@ static uint32_t samples_sum = 0;
 static volatile uint8_t samples_cnt = 0;
 
 volatile uint32_t ttms = 0, lastms = 0;
-volatile uint8_t pressed = 0, released = 0, overheat = 0, pwrstate = 0;
+volatile uint8_t pressed = 0, released = 0, overheat = 0, pwrstate = 0; // shortpress = 0, longpress = 0;
 volatile uint8_t lastbtcnt = 0, btcnt = 0;
 volatile uint16_t duty = 0, value = 0;
+
 
 
 static void adc_init(void)
@@ -88,7 +89,7 @@ void button_process()
 	  if (lastbtcnt > 20) // Длинное нажатие (удержание)
 	  {
 	    pressed = 0; 
-	    //released = 0; 
+	    // released = 0; 
 	    lastbtcnt = 0;
       poweron();
       // if (pwrstate == 0) poweron(); else poweroff(); // Если БП выключен -> включим
@@ -134,6 +135,7 @@ int main(void)
   {
     adc_process();
     button_process();
+
   }
   return 0;
 }
