@@ -9,11 +9,15 @@
 #define	ADCPIN  PB4
 #define	SAMPLES_MAX (64) // max number of samples
 
+
 static uint32_t samples_sum = 0;
 static volatile uint8_t samples_cnt = 0;
+
 volatile uint32_t ttms = 0, lastms = 0;
-volatile uint8_t pressed = 0, released = 0, lastbtcnt = 0, btcnt = 0, overheat = 0;
+volatile uint8_t pressed = 0, released = 0, overheat = 0, pwrstate = 0;
+volatile uint8_t lastbtcnt = 0, btcnt = 0;
 volatile uint16_t duty = 0, value = 0;
+
 
 static void adc_init(void)
 {
@@ -44,17 +48,20 @@ void poweroff()
 {
   PORTB |=  (1 << LEDPIN);
   PORTB &= ~(1 << PWRPIN);
+  pwrstate = 0;
 }
 
 void poweron()
 {
   PORTB &= ~(1 << LEDPIN);
   PORTB |=  (1 << PWRPIN);
+  pwrstate = 1;
 }
 
 void button_process()
 {
-  if (overheat) { poweroff(); return;}
+  if (overheat) { poweroff(); return; }
+
   if (lastms > ttms || ttms - lastms > 100)
   {
     lastms = ttms;
@@ -70,7 +77,7 @@ void button_process()
 	
 	if ((pressed) & (btcnt == 0)) released = 1;
 
-	if ((lastbtcnt > 2) & (released)) 
+	if ((lastbtcnt > 2) & (released)) // Короткое нажатие -> выключение
 	{
 	  poweroff();
 	  pressed = 0;
@@ -78,9 +85,9 @@ void button_process()
 	  lastbtcnt = 0;
 	}
 		
-	if (lastbtcnt > 25) 
+	if (lastbtcnt > 25) // Длинное нажатие (удержание)
 	{
-	  poweron();
+	  if (pwrstate) poweron(); else poweroff(); // Если БП выключен -> включим
 	  pressed = 0; 
 	  released = 0; 
 	  lastbtcnt = 0;

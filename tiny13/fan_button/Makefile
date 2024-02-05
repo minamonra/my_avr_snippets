@@ -10,7 +10,7 @@ AVRDUDE = avrdude
 CFLAGS = -std=c99 -Wall -g -Os -mmcu=${MCU} -DF_CPU=${F_CPU} -I.
 TARGET = fan_button
 
-SRCS = fan_button.c
+SRCS = $(TARGET).c
 
 all:
 	${CC} ${CFLAGS} -o ${TARGET}.o ${SRCS}
